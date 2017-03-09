@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import cv2
 
+from skimage.feature import hog
 
 def extract_files(parent, extension='.png'):
     """
@@ -45,6 +46,32 @@ def show_images(image_files, num_of_images=15, images_per_row=5, main_title=None
         plt.suptitle(main_title)
     plt.show()
 
+
+
+def get_hog_features(img, orient, pix_per_cell, cell_per_block, vis=False, feature_vec=True):
+    """
+    This method generates hog features from the input image according to the values of the following parameters
+    :param img:
+        The input image
+    :param orient:
+    :param pix_per_cell:
+    :param cell_per_block:
+    :param vis:
+    :param feature_vec:
+    :return:
+        Generated features
+    """
+    if vis:
+        features, hog_image = hog(img, orientations=orient, pixels_per_cell=(pix_per_cell, pix_per_cell), \
+                                  cells_per_block=(cell_per_block, cell_per_block), transform_sqrt=False, \
+                                  visualise=True, feature_vector=False)
+        return features.ravel(), hog_image
+    else:
+
+        features = hog(img, orientations=orient, pixels_per_cell=(pix_per_cell, pix_per_cell), \
+                       cells_per_block=(cell_per_block, cell_per_block), transform_sqrt=False, \
+                       visualise=False, feature_vector=feature_vec)
+        return features.ravel()
 
 def display_hog_features(hog_features, images, color_map=None, suptitle=None):
     """
@@ -111,7 +138,7 @@ def apply_threshold(heatmap, threshold):
     return heatmap
 
 
-def draw_labeled_bboxes(img, labels):
+def draw_bboxe(img, labels):
     """
     Draw boxes on top of the given image
     :param img:
