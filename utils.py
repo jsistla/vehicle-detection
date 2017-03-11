@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import cv2
 
-from skimage.feature import hog
 
 def extract_files(parent, extension='.png'):
     """
@@ -48,30 +47,6 @@ def show_images(image_files, num_of_images=15, images_per_row=5, main_title=None
 
 
 
-def get_hog_features(img, orient, pix_per_cell, cell_per_block, vis=False, feature_vec=True):
-    """
-    This method generates hog features from the input image according to the values of the following parameters
-    :param img:
-        The input image
-    :param orient:
-    :param pix_per_cell:
-    :param cell_per_block:
-    :param vis:
-    :param feature_vec:
-    :return:
-        Generated features
-    """
-    if vis:
-        features, hog_image = hog(img, orientations=orient, pixels_per_cell=(pix_per_cell, pix_per_cell), \
-                                  cells_per_block=(cell_per_block, cell_per_block), transform_sqrt=False, \
-                                  visualise=True, feature_vector=False)
-        return features.ravel(), hog_image
-    else:
-
-        features = hog(img, orientations=orient, pixels_per_cell=(pix_per_cell, pix_per_cell), \
-                       cells_per_block=(cell_per_block, cell_per_block), transform_sqrt=False, \
-                       visualise=False, feature_vector=feature_vec)
-        return features.ravel()
 
 def display_hog_features(hog_features, images, color_map=None, suptitle=None):
     """
@@ -112,7 +87,7 @@ def add_heat(heatmap, bbox_list):
     return heatmap
 
 
-def draw_sliding_windows(image, windows, color=(197, 27, 138), thick=3):
+def draw_sliding_windows(image, windows, color=(0, 0, 255), thick=3):
     """
     Draw app possible sliding windows on top of the given image.
     :param image:
@@ -138,7 +113,7 @@ def apply_threshold(heatmap, threshold):
     return heatmap
 
 
-def draw_bboxe(img, labels):
+def draw_bboxes(img, labels):
     """
     Draw boxes on top of the given image
     :param img:
@@ -155,7 +130,7 @@ def draw_bboxe(img, labels):
         # Define a bounding box based on min/max x and y
         bbox = ((np.min(nonzerox), np.min(nonzeroy)), (np.max(nonzerox), np.max(nonzeroy)))
         # Draw the box on the image
-        cv2.rectangle(img, bbox[0], bbox[1], (197, 27, 138), 3)
+        cv2.rectangle(img, bbox[0], bbox[1], (0, 0, 255), 3)
     # Return the image
     return img
 
