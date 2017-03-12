@@ -130,7 +130,7 @@ Following two figures show the HOG features generated for vehicle and non-vehicl
 
 
 <p align="center">
-    <img src="./output_images/vehicle-hog-features.png"/>
+    <img src="./output_images/Vehicle-hog-features.png"/>
 </p>
 
 <p align="center">
@@ -175,6 +175,8 @@ The **`add_heat(heatmap, bbox_list)`** and **`apply_threshold(heatmap, threshold
 
 In addition to **`add_heat(heatmap, bbox_list)`**  and **`apply_threshold(heatmap, threshold)`** we created a separate class call **`FrameQueue`** in the **`vehicle`** file in order to improve the smoothness of the predicted bounding boxes. **`FrameQueue`** stores last `N` (configurable) number of heat-maps. When it comes to predicting the thresholded heat-map, we calculated the sum of last `N` heat-maps and that calculated heat-map passed to the **`apply_threshold(heatmap, threshold)`** method.
 
+Here is how the heatmap looks for the above test image.
+
 <p align="center">
     <img src="./output_images/heat-map.png">
 </p>
@@ -216,9 +218,6 @@ sample_output_2 = vehicle_detector.detect(sample_image_2)
     <img src="./output_images/output-test6.png"/>
 </p>
 
-<p align="center">
-    <img src="./output_images/output-test3.png"/>
-</p>
 
 ```python
 vehicle_detector = detection.VehicleDetect(color_space=color_space,
