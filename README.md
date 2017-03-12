@@ -56,16 +56,16 @@ The sample of the vehicle and non-vehicle images of that dataset is shown below.
 
 ### Vehicle Detection Pipeline
 
-The following figure shows the vehicle detection pipeline we used for the project. As the picture depicted, pipeline starts with the sliding window stage. 
+The following figure shows the vehicle detection pipeline I used for the project. As the picture depicted, pipeline starts with the sliding window stage. 
 Next, the extracted image patches went to the feature generation stage. Generated features are used as the input of the SVM algorithm. Based on the output
-of the machine learning model, we updated the heat map. Finally, the heat map was thresholded to extract vehicle bounding boxes.
+of the machine learning model, I updated the heat map. Finally, the heat map was thresholded to extract vehicle bounding boxes.
 
 <p align="center">
    <img src="./output_images/pipeline-p5.png"/>
 </p>
 
 
-Next, we are going to discuss these pipeline stages in detail.
+Next, I am going to discuss these pipeline stages in detail.
 
 ### Sliding Windows for Identifying Vehicles
 
@@ -118,13 +118,13 @@ each parameter is also given below.
    2. `pix_per_cell = 8`
    3. `cell_per_block = 2`
    4. `cspace = YCrCb`
-   5. **`get_hog_features()`** method in the **`vehicle`** file.
+   5. **`get_hog_features()`** method in the **`detection`** file.
 2. Spatial Binning
    1. `nbins=32`
-   2. **`bin_spatial()`** method in the **`vehicle`** file.
+   2. **`bin_spatial()`** method in the **`detection`** file.
 3. Color Histograms
    1. `color_hist = 32`
-   2. **`color_hist()`** method in the **`vehicle`** file.
+   2. **`color_hist()`** method in the **`detection`** file.
 
 Following two figures show the HOG features generated for vehicle and non-vehicle gray scale images.
 
@@ -139,21 +139,21 @@ Following two figures show the HOG features generated for vehicle and non-vehicl
 
 ### Training the Machine Learning Model
 
-When it comes to selecting a machine learning algorithm for vehicle tracking problem, We had two concerns namely: accuracy and speed.
-So We picked Linear SVM classifier because it provides a reasonable trade-off between speed and accuracy.
+When it comes to selecting a machine learning algorithm for vehicle tracking problem, I had two concerns namely: accuracy and speed.
+So I picked Linear SVM classifier because it provides a reasonable trade-off between speed and accuracy.
 
 It is a well-known fact that hyper-parameter optimization is one of the key steps in building machine learning models and picking the
 most suitable hyper-parameters helps a lot to get the best predictive performance. Hence, I put a reasonable effort to estimate the best 
 possible hyper-parameters in order to optimize the performance of our models.
 
 
-We used **Grid Search** hyper-parameter optimization method and following are the optimized hyper-parameter values we manged to estimate for out Linear SVM model.
+I used **Grid Search** hyper-parameter optimization method and following are the optimized hyper-parameter values I manged to estimate for out Linear SVM model.
 
 1. Penalty Value C: 0.08
 2. Penalty: l2
 3. Loss: hinge
 
-In addition to the hyper-parameters of the Linear SVM, we have few parameters in our vehicle detection system such as `spatial_size`, `pix_per_cell`, and `HOG orientations`. For those parameters, we used recommended values available in computer vision literature.
+In addition to the hyper-parameters of the Linear SVM, I have few parameters in our vehicle detection system such as `spatial_size`, `pix_per_cell`, and `HOG orientations`. For those parameters, I used recommended values available in computer vision literature.
 
 For more details regarding the training and validating our machine learning model please refer **`Vehicle-detection.ipynb`** notebook.
 
@@ -163,7 +163,7 @@ For more details regarding the training and validating our machine learning mode
 
 ### Handling False Positives and Multiple Detectors
 
-Once we have above pipeline stages were ready, we created a vehicle detector using those pipeline stages. However, it gave us a lot of duplicate and false positive detections.
+Once I have above pipeline stages ready, I created a vehicle detector using those pipeline stages. However, it gave us a lot of duplicate and false positive detections.
 
 Next, **heat-maps**  are used to remove both false positives and multiple detectors. Heat-map work as follows.
 
@@ -171,9 +171,9 @@ Next, **heat-maps**  are used to remove both false positives and multiple detect
 2. Add "heat" (+=1) for all pixels within windows where a positive detection is reported by your classifier.
 3. The hot parts of the map are where the cars are, and by imposing a threshold, I rejected areas affected by false positives.
 
-The **`add_heat(heatmap, bbox_list)`** and **`apply_threshold(heatmap, threshold)`** methods in the **`helper`** file encapsulate the functionalities described in above three items. Based on the output of the **`apply_threshold(heatmap, threshold)`** methods, we draw bounding boxes around each detected cars.
+The **`add_heat(heatmap, bbox_list)`** and **`apply_threshold(heatmap, threshold)`** methods in the **`helper`** file encapsulate the functionalities described in above three items. Based on the output of the **`apply_threshold(heatmap, threshold)`** methods, I draw bounding boxes around each detected cars.
 
-In addition to **`add_heat(heatmap, bbox_list)`**  and **`apply_threshold(heatmap, threshold)`** we created a separate class call **`FrameQueue`** in the **`vehicle`** file in order to improve the smoothness of the predicted bounding boxes. **`FrameQueue`** stores last `N` (configurable) number of heat-maps. When it comes to predicting the thresholded heat-map, we calculated the sum of last `N` heat-maps and that calculated heat-map passed to the **`apply_threshold(heatmap, threshold)`** method.
+In addition to **`add_heat(heatmap, bbox_list)`**  and **`apply_threshold(heatmap, threshold)`** I created a separate class call **`FrameQueue`** in the **`vehicle`** file in order to improve the smoothness of the predicted bounding boxes. **`FrameQueue`** stores last `N` (configurable) number of heat-maps. When it comes to predicting the thresholded heat-map, I calculated the sum of last `N` heat-maps and that calculated heat-map passed to the **`apply_threshold(heatmap, threshold)`** method.
 
 Here is how the heatmap looks for the above test image.
 
@@ -182,12 +182,12 @@ Here is how the heatmap looks for the above test image.
 </p>
 
 ## Output
-In order to easily work with both images and videos, we have created a class (indide the **`detection`** file) called **`VehicleDetect`**. It encapsulates methods described above and provides an easy to use interface: **`detect(self, input_image)`**. **`detect`** method accept road images as input and produces annotated images as output.
+In order to easily work with both images and videos, I created a class (indide the **`detection`** file) called **`VehicleDetect`**. It encapsulates methods described above and provides an easy to use interface: **`detect(self, input_image)`**. **`detect`** method accept road images as input and produces annotated images as output.
 
-Following section shows how we can use **`VehicleDetect`** with road images and videos.
+Following section shows how I used **`VehicleDetect`** with road images and videos.
 
 ```Python
-vehicle_detector = detection.VehicleDetect(color_space=color_space,
+vehicle_detect = detection.VehicleDetect(color_space=color_space,
                                   orient=orient,
                                   pix_per_cell=pix_per_cell,
                                   cell_per_block=cell_per_block,
@@ -220,7 +220,7 @@ sample_output_2 = vehicle_detector.detect(sample_image_2)
 
 
 ```python
-vehicle_detector = detection.VehicleDetect(color_space=color_space,
+vehicle_detect = detection.VehicleDetect(color_space=color_space,
                                   orient=orient,
                                   pix_per_cell=pix_per_cell,
                                   cell_per_block=cell_per_block,
